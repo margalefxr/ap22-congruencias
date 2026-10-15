@@ -1,66 +1,41 @@
-"""
-AP22 - Comprobador de congruencias
-Autor: Xavier Margalef Riestra
-
-Pide tres enteros (a, b, n) y comprueba si a ≡ b (mod n).
-Dos criterios equivalentes, ambos mostrados:
-  1. a mod n == b mod n          (mismo resto)
-  2. (a - b) es multiplo de n    (la diferencia es divisible por n)
-
-Solo libreria estandar: sin dependencias externas.
-"""
+# AP22 - Comprobador de congruencias
+# Xavier Margalef Riestra
+#
+# Pide a, b y n y dice si a es congruente con b modulo n (a ≡ b mod n)
 
 
-def leer_entero(mensaje: str) -> int:
-    """Pide un entero y repite hasta que el usuario introduce uno valido."""
+def es_congruente(a, b, n):
+    # Son congruentes si dan el mismo resto al dividir entre n
+    return a % n == b % n
+
+
+def pedir_numero(texto):
+    # Vuelve a preguntar si no se mete un numero entero
     while True:
-        valor = input(mensaje).strip()
         try:
-            return int(valor)
+            return int(input(texto))
         except ValueError:
-            print(f"  '{valor}' no es un entero. Prueba otra vez.")
-
-
-def comprobar_congruencia(a: int, b: int, n: int) -> dict:
-    """
-    Devuelve los datos del calculo y si a ≡ b (mod n).
-    n debe ser un entero positivo: el modulo 0 no esta definido y un modulo
-    negativo da la misma relacion que su valor absoluto.
-    """
-    if n <= 0:
-        raise ValueError("El modulo n debe ser un entero positivo (n > 0)")
-    resto_a = a % n          # en Python el resto con n > 0 siempre es >= 0, tambien con a negativo
-    resto_b = b % n
-    diferencia = a - b
-    return {
-        "resto_a": resto_a,
-        "resto_b": resto_b,
-        "diferencia": diferencia,
-        "cociente": diferencia // n,
-        "congruentes": resto_a == resto_b,
-    }
-
-
-def main() -> None:
-    print("== Comprobador de congruencias: a ≡ b (mod n) ==")
-    a = leer_entero("a: ")
-    b = leer_entero("b: ")
-    n = leer_entero("n (modulo, > 0): ")
-    while n <= 0:
-        print("  El modulo debe ser mayor que 0.")
-        n = leer_entero("n (modulo, > 0): ")
-
-    r = comprobar_congruencia(a, b, n)
-    print(f"\n{a} mod {n} = {r['resto_a']}")
-    print(f"{b} mod {n} = {r['resto_b']}")
-    print(f"{a} - {b} = {r['diferencia']}", end="")
-    if r["congruentes"]:
-        print(f" = {n} * ({r['cociente']})  -> multiplo de {n}")
-        print(f"\nResultado: {a} ≡ {b} (mod {n})  -> SON congruentes")
-    else:
-        print(f"  -> no es multiplo de {n}")
-        print(f"\nResultado: {a} ≢ {b} (mod {n})  -> NO son congruentes")
+            print("Eso no es un numero entero, prueba otra vez")
 
 
 if __name__ == "__main__":
-    main()
+    print("Comprobador de congruencias: a ≡ b (mod n)")
+
+    a = pedir_numero("a: ")
+    b = pedir_numero("b: ")
+    n = pedir_numero("n: ")
+    while n <= 0:
+        print("n tiene que ser mayor que 0")
+        n = pedir_numero("n: ")
+
+    print()
+    print(a, "mod", n, "=", a % n)
+    print(b, "mod", n, "=", b % n)
+    print(a, "-", b, "=", a - b)
+
+    if es_congruente(a, b, n):
+        print(a - b, "es multiplo de", n)
+        print("Resultado:", a, "≡", b, "(mod", str(n) + ") -> SON congruentes")
+    else:
+        print(a - b, "no es multiplo de", n)
+        print("Resultado:", a, "≢", b, "(mod", str(n) + ") -> NO son congruentes")
